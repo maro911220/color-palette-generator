@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { Share2, Save } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ColorCard } from "@/app/components/color-card";
@@ -114,7 +114,7 @@ function useSavedPalettes() {
 }
 
 // Main Component
-export default function Main() {
+function PaletteContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { copyToClipboard } = useClipboard();
@@ -276,5 +276,19 @@ export default function Main() {
         />
       </main>
     </>
+  );
+}
+
+export default function Main() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <p className="text-lg animate-pulse">Loading Palette Generator...</p>
+        </div>
+      }
+    >
+      <PaletteContent />
+    </Suspense>
   );
 }
